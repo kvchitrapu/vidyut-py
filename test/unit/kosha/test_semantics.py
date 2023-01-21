@@ -1,11 +1,7 @@
-import tempfile
-
 import pytest
 
 
 from vidyut.kosha import (
-    Builder,
-    Kosha,
     Purusha,
     Vacana,
     Pada,
@@ -234,6 +230,6 @@ def test_pada__make_avyaya():
 
 def test_pada__make_avyaya__missing_args():
     with pytest.raises(TypeError):
-        p = Pada.make_avyaya(
+        Pada.make_avyaya(
             # pratipadika=Pratipadika(text="ca"),
         )

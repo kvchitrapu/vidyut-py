@@ -131,7 +131,7 @@ impl PyAshtadhyayi {
     #[pyo3(signature = (*, dhatu, prayoga, purusha, vacana, lakara, sanadi = None))]
     pub fn derive_tinantas(
         &self,
-        dhatu: String,
+        dhatu: &PyDhatu,
         prayoga: Prayoga,
         purusha: Purusha,
         vacana: Vacana,
@@ -147,7 +147,7 @@ impl PyAshtadhyayi {
             .expect("should have all required fields");
 
         let mut dhatu = Dhatu::builder()
-            .upadesha(&dhatu)
+            .upadesha(&dhatu.upadesha())
             // TODO: set gana
             .gana(Gana::Bhvadi);
 

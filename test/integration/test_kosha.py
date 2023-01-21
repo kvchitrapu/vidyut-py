@@ -52,7 +52,7 @@ def kosha() -> Kosha:
 )
 def test_contains_tinanta(kosha, word):
     entries = kosha.get_all(word)
-    assert any(e.info.pos == PartOfSpeech.Tinanta for e in entries)
+    assert any(e.pos == PartOfSpeech.Tinanta for e in entries)
 
 
 @pytest.mark.parametrize(
@@ -94,7 +94,7 @@ def test_contains_tinanta(kosha, word):
 )
 def test_contains_subanta(kosha, word):
     entries = kosha.get_all(word)
-    assert any(e.info.pos == PartOfSpeech.Subanta for e in entries)
+    assert any(e.pos == PartOfSpeech.Subanta for e in entries)
 
 
 @pytest.mark.parametrize(
@@ -111,4 +111,4 @@ def test_contains_subanta(kosha, word):
 )
 def test_contains_avyaya(kosha, word):
     entries = kosha.get_all(word)
-    assert any(e.info.pos == PartOfSpeech.Avyaya for e in entries)
+    assert any(e.pos == PartOfSpeech.Avyaya for e in entries)

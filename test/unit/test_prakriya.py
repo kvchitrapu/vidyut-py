@@ -24,8 +24,9 @@ def test_dhatupatha():
 
 
 def test_basic_kartari_tinantas():
+    bhu = d["01.0001"]
     prakriyas = a.derive_tinantas(
-        dhatu="BU",
+        dhatu=bhu,
         prayoga=Prayoga.Kartari,
         purusha=Purusha.Prathama,
         vacana=Vacana.Eka,
@@ -36,8 +37,9 @@ def test_basic_kartari_tinantas():
 
 
 def test_basic_karmani_tinantas():
+    bhu = d["01.0001"]
     prakriyas = a.derive_tinantas(
-        dhatu="BU",
+        dhatu=bhu,
         prayoga=Prayoga.Karmani,
         purusha=Purusha.Prathama,
         vacana=Vacana.Eka,
@@ -48,8 +50,9 @@ def test_basic_karmani_tinantas():
 
 
 def test_sannanta_tinantas():
+    bhu = d["01.0001"]
     prakriyas = a.derive_tinantas(
-        dhatu="BU",
+        dhatu=bhu,
         prayoga=Prayoga.Kartari,
         purusha=Purusha.Prathama,
         vacana=Vacana.Eka,
@@ -61,8 +64,9 @@ def test_sannanta_tinantas():
 
 
 def test_nijanta_tinantas():
+    bhu = d["01.0001"]
     prakriyas = a.derive_tinantas(
-        dhatu="BU",
+        dhatu=bhu,
         prayoga=Prayoga.Kartari,
         purusha=Purusha.Prathama,
         vacana=Vacana.Eka,
@@ -75,8 +79,9 @@ def test_nijanta_tinantas():
 
 
 def test_yananta_tinantas():
+    bhu = d["01.0001"]
     prakriyas = a.derive_tinantas(
-        dhatu="BU",
+        dhatu=bhu,
         prayoga=Prayoga.Kartari,
         purusha=Purusha.Prathama,
         vacana=Vacana.Eka,

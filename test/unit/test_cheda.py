@@ -9,11 +9,8 @@ from vidyut.kosha import PartOfSpeech
 
 from vidyut.kosha import (
     Builder,
-    Vacana,
     Pada,
     Pratipadika,
-    Linga,
-    Vibhakti,
 )
 
 
@@ -58,7 +55,7 @@ def create_model_files(model_dir):
 @pytest.fixture(scope="module")
 def chedaka() -> Chedaka:
     with tempfile.TemporaryDirectory() as tempdir:
-        tempdir = Path(tempdir)
+        tempdir: Path = Path(tempdir)
         create_kosha(tempdir / "kosha")
         create_sandhi_rules(tempdir / "sandhi-rules.csv")
         create_model_files(tempdir / "model")

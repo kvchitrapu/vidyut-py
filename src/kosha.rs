@@ -6,16 +6,6 @@ use vidyut_kosha as rust;
 
 pub mod semantics;
 
-#[pyclass(name = "Entry", get_all)]
-pub struct Entry {
-    /// The lookup key for this entry.
-    pub text: String,
-    /// The underlying lemma.
-    pub lemma: String,
-    /// The morphological informated associated with this entry.
-    pub info: PyPada,
-}
-
 #[pyclass]
 pub struct Kosha(rust::Kosha);
 
@@ -39,17 +29,13 @@ impl Kosha {
         self.0.contains_prefix(&key)
     }
 
-    pub fn get_all(&self, key: String) -> Vec<Entry> {
+    pub fn get_all(&self, key: String) -> Vec<PyPada> {
         let results = self.0.get_all(&key);
         results
             .iter()
             .flat_map(|p| {
                 if let Ok(pada) = self.0.unpack(p) {
-                    Some(Entry {
-                        text: key.to_string(),
-                        lemma: pada.lemma(),
-                        info: pada.into(),
-                    })
+                    Some(pada.into())
                 } else {
                     None
                 }

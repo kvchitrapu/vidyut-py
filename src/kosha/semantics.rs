@@ -221,9 +221,9 @@ pub enum PyLakara {
     /// *laṅ-lakāra* (imperfect).
     Lan,
     /// *liṅ-lakāra* in the sense of benediction (benedictive).
-    LinAshih,
+    AshirLin,
     /// *liṅ-lakāra* in the sense of a rule or injunction (optative).
-    LinVidhi,
+    VidhiLin,
     /// *luṅ-lakāra* (aorist).
     Lun,
     /// *luṅ-lakāra* without its *a-* prefix (injunctive).
@@ -243,8 +243,8 @@ impl ToPy<Option<PyLakara>> for Lakara {
             Lakara::Let => Some(Let),
             Lakara::Lot => Some(Lot),
             Lakara::Lan => Some(Lan),
-            Lakara::LinVidhi => Some(LinVidhi),
-            Lakara::LinAshih => Some(LinAshih),
+            Lakara::LinAshih => Some(AshirLin),
+            Lakara::LinVidhi => Some(VidhiLin),
             Lakara::Lun => Some(Lun),
             Lakara::LunNoAgama => Some(LunNoAgama),
             Lakara::Lrn => Some(Lrn),
@@ -267,8 +267,8 @@ impl ToRust<Lakara> for Option<PyLakara> {
                 Py::Let => R::Let,
                 Py::Lot => R::Lot,
                 Py::Lan => R::Lan,
-                Py::LinVidhi => R::LinVidhi,
-                Py::LinAshih => R::LinAshih,
+                Py::VidhiLin => R::LinVidhi,
+                Py::AshirLin => R::LinAshih,
                 Py::Lun => R::Lun,
                 Py::LunNoAgama => R::LunNoAgama,
                 Py::Lrn => R::Lrn,

@@ -1,6 +1,5 @@
 import os
 import pytest
-from pathlib import Path
 
 from vidyut.cheda import Chedaka
 

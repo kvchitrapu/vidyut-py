@@ -90,7 +90,8 @@ from vidyut.cheda import Chedaka
 chedaka = Chedaka('/path/to/vidyut-data')
 
 # All input must be in SLP1.
-print(chedaka.run('gacCati'))
+for token in chedaka.run('gacCati'):
+    print(token.text, token.info)
 ```
 
 Using `vidyut-kosha`:
@@ -99,8 +100,18 @@ Using `vidyut-kosha`:
 from vidyut.kosha import Kosha
 
 kosha = Kosha("/path/to/vidyut-data/kosha")
-for result in kosha.get("gacCati"):
-    print(result)
+for entry in kosha.get("gacCati"):
+    print(entry.info)
+```
+
+Using `vidyut-sandhi`:
+
+```python
+from vidyut.sandhi import Splitter
+
+splitter = Splitter("/path/to/vidyut-data/sandhi-rules.csv")
+for split in splitter.split("ityapi", 2):
+    print(split.first, split.second, split.is_valid)
 ```
 
 Using `vidyut-prakriya`:

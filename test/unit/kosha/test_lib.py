@@ -102,8 +102,5 @@ def test_kosha__get_all(kosha):
     assert len(kosha.get_all("gacCati")) == 2
 
     [tin, sup] = kosha.get_all("gacCati")
-    assert tin.text == "gacCati"
-    assert tin.info == gacchati_tin
-
-    assert sup.text == "gacCati"
-    assert sup.info == gacchati_sup
+    assert tin == gacchati_tin
+    assert sup == gacchati_sup
