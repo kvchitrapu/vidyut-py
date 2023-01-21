@@ -1,7 +1,7 @@
-use pyo3::exceptions::PyKeyError;
+use pyo3::exceptions::{PyFileNotFoundError, PyKeyError, PyValueError};
 use pyo3::prelude::*;
 use std::path::PathBuf;
-use vidyut_prakriya::args::{Dhatu, TinantaArgs};
+use vidyut_prakriya::args::{Dhatu, Gana, KrdantaArgs, TinantaArgs};
 use vidyut_prakriya::{Ashtadhyayi, Dhatupatha};
 use vidyut_prakriya::{Prakriya, Rule, Step};
 
@@ -31,10 +31,15 @@ pub struct PyPrakriya {
 }
 
 #[pyclass(name = "Dhatu")]
-pub struct PyDhatu {
+pub struct PyDhatu(Dhatu);
+
+#[pymethods]
+impl PyDhatu {
     /// The aupadeshika form of this dhatu.
-    #[pyo3(get)]
-    pub upadesha: String,
+    #[getter]
+    fn upadesha(&self) -> String {
+        self.0.upadesha().to_string()
+    }
 }
 
 fn to_py_history(history: &[Step]) -> Vec<PyStep> {
@@ -57,40 +62,75 @@ fn to_py_prakriyas(prakriyas: Vec<Prakriya>) -> Vec<PyPrakriya> {
         .collect()
 }
 
+/// Provides an interface to the Dhatupatha.
 #[pyclass(name = "Dhatupatha")]
 pub struct PyDhatupatha(Dhatupatha);
 
 #[pymethods]
 impl PyDhatupatha {
+    /// Creates a new dhatupatha instance from the given `path`.
+    ///
+    /// `path` should point to a 3-column TSV with columns `code`, `dhatu`, and `artha`.
+    ///
+    /// - `code` should be a number in the format "X.Y", such as "01.0001".
+    ///
+    /// - `dhatu` should be the dhatu`s aupadeshika form transliterated as SLP1.
+    ///   Svaras and nasal vowels must be indicated explictly.
+    ///
+    /// - `artha` is an arbitrary string.
+    ///
+    /// Exceptions:
+    /// - `FlieNotFoundError` if the file does not exist.
+    /// - `ValueError` if the function cannot parse the input file.
     #[new]
-    pub fn new(path: PathBuf) -> Self {
-        Self(Dhatupatha::from_path(path).unwrap())
+    pub fn new(path: PathBuf) -> PyResult<Self> {
+        if !path.exists() {
+            let message = format!("No such file: '{}'", path.display());
+            return Err(PyFileNotFoundError::new_err(message));
+        }
+
+        match Dhatupatha::from_path(&path) {
+            Ok(d) => Ok(Self(d)),
+            Err(e) => {
+                let message = format!(
+                    "Could not parse file '{}'. Error was: `{}`",
+                    path.display(),
+                    e
+                );
+                Err(PyValueError::new_err(message))
+            }
+        }
     }
 
-    pub fn __getitem__(&self, key: String) -> PyResult<PyDhatu> {
-        match self.0.get(&key) {
-            Some(d) => Ok(PyDhatu {
-                upadesha: d.upadesha().to_string(),
-            }),
-            None => Err(PyKeyError::new_err("No value for key")),
+    /// Returns the dhatu with the given `code`, if it exists.
+    ///
+    /// If a dhatu is found, it will be returned by value.
+    ///
+    /// Exceptions:
+    /// - `KeyError` if the given `code` is not found.
+    pub fn __getitem__(&self, code: String) -> PyResult<PyDhatu> {
+        match self.0.get(&code) {
+            Some(d) => Ok(PyDhatu(d.clone())),
+            None => Err(PyKeyError::new_err(code)),
         }
     }
 }
 
+/// An interface to the rules of the Ashtadhyayi.
 #[pyclass(name = "Ashtadhyayi")]
 #[derive(Default)]
 pub struct PyAshtadhyayi(Ashtadhyayi);
 
 #[pymethods]
 impl PyAshtadhyayi {
-    /// Creates a new API manager
-    ///
-    /// This constructor is not called `new` because `new` is a reserved word in JavaScript.
+    /// Creates an interface with sane defaults.
     #[new]
     pub fn new() -> Self {
         Self(Ashtadhyayi::new())
     }
 
+    /// Returns all possible tinanta prakriyas that can be derived with the given initial
+    /// conditions.
     #[args(
         py_args = "*",
         dhatu,
@@ -120,7 +160,7 @@ impl PyAshtadhyayi {
         let mut dhatu = Dhatu::builder()
             .upadesha(&dhatu)
             // TODO: set gana
-            .gana(1);
+            .gana(Gana::Bhvadi);
 
         if let Some(sanadi) = sanadi {
             dhatu = dhatu.sanadi(&[sanadi.into()]);
@@ -128,6 +168,22 @@ impl PyAshtadhyayi {
         let dhatu = dhatu.build().expect("should have all required fields");
 
         let results = self.0.derive_tinantas(&dhatu, &tin_args);
+        let py_results = to_py_prakriyas(results);
+        Ok(py_results)
+    }
+
+    /// Returns all possible krdanta prakriyas that can be derived with the given initial
+    /// conditions.
+    #[args(py_args = "*", dhatu, krt)]
+    pub fn derive_krdantas(&self, dhatu: &PyDhatu, krt: Krt) -> PyResult<Vec<PyPrakriya>> {
+        let args = KrdantaArgs::builder()
+            .krt(krt.into())
+            .build()
+            .expect("should have all required fields");
+
+        let dhatu = &dhatu.0;
+
+        let results = self.0.derive_krdantas(dhatu, &args);
         let py_results = to_py_prakriyas(results);
         Ok(py_results)
     }

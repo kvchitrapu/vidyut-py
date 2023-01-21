@@ -1,3 +1,4 @@
+# Checks that the caller is in a virtual environment.
 py-venv-check: 
 ifeq ("$(VIRTUAL_ENV)","")
 	@echo "Error: You are not running within a virtualenv. Please run the following command:"
@@ -23,8 +24,23 @@ install:
 build: py-venv-check
 	maturin build
 
+# Builds the package and installs it in the local virtualenv.
 develop: py-venv-check
 	maturin develop
 
+# Runs all Python-specific unit tests.
 test: develop
-	pytest
+	pytest test/unit/
+
+# Runs integration tests against a data directory.
+#
+# Usage:
+#
+# VIDYUT_DATA_DIR="/path/to/your/dir" make integration_tests
+integration_tests: develop
+	pytest test/integration/
+
+# Lints all Rust and Python code.
+lint:
+	cargo fmt
+	black .

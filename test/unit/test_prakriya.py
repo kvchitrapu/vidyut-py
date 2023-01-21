@@ -1,12 +1,21 @@
-from vidyut import Ashtadhyayi, Dhatupatha, Prayoga, Purusha, Vacana, Sanadi, Lakara
+from vidyut.prakriya import (
+    Ashtadhyayi,
+    Dhatupatha,
+    Krt,
+    Lakara,
+    Prayoga,
+    Purusha,
+    Sanadi,
+    Vacana,
+)
+
 
 a = Ashtadhyayi()
+# Path is relative to the project root.
+d = Dhatupatha("test/data/test-dhatupatha.tsv")
 
 
 def test_dhatupatha():
-    # Path is relative to the project root.
-    d = Dhatupatha("test/data/test-dhatupatha.tsv")
-
     bhu = d["01.0001"]
     assert bhu.upadesha == "BU"
 
@@ -76,3 +85,13 @@ def test_yananta_tinantas():
     )
     assert len(prakriyas) == 1
     assert prakriyas[0].text == "boBUyate"
+
+
+def test_krdantas():
+    bhu = d["01.0001"]
+    prakriyas = a.derive_krdantas(
+        dhatu=bhu,
+        krt=Krt.ktvA,
+    )
+    assert len(prakriyas) == 1
+    assert prakriyas[0].text == "BUtvA"

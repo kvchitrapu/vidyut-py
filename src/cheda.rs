@@ -1,66 +1,29 @@
 use vidyut_cheda::{Chedaka, Config};
-use vidyut_kosha::semantics::Pada;
 
+use crate::common::PyPada;
 use pyo3::exceptions::PyValueError;
 use pyo3::prelude::*;
-use std::collections::HashMap;
 use std::path::PathBuf;
 
-trait ToPyDict {
-    fn to_pydict(&self) -> HashMap<String, String>;
-}
-
-impl ToPyDict for Pada {
-    fn to_pydict(&self) -> HashMap<String, String> {
-        let mut ret = HashMap::new();
-        let pos = match self {
-            Pada::Avyaya(_) => "avyaya",
-            Pada::Subanta(_) => "subanta",
-            Pada::Tinanta(_) => "tinanta",
-            Pada::None => "none",
-        };
-
-        match self {
-            // FIXME: add more semantics here.
-            Pada::Tinanta(s) => {
-                ret.insert("purusha", s.purusha.as_str());
-                ret.insert("vacana", s.vacana.as_str());
-                // FIXME: add more fields here.
-            }
-            Pada::Subanta(s) => {
-                ret.insert("linga", s.linga.as_str());
-                ret.insert("vacana", s.vacana.as_str());
-                ret.insert("vibhakti", s.vibhakti.as_str());
-                // FIXME: how to set Python boolean here?
-                ret.insert(
-                    "is_purvapada",
-                    if s.is_purvapada { "true" } else { "false" },
-                );
-            }
-            &_ => (),
-        }
-
-        ret.insert("pos", pos);
-        ret.iter()
-            .map(|(x, y)| (x.to_string(), y.to_string()))
-            .collect()
-    }
-}
-
 /// A parsed word.
-#[allow(dead_code)]
-#[pyclass(name = "ParsedWord")]
-pub struct PyParsedWord {
+#[pyclass(name = "Token")]
+pub struct PyToken {
+    /// The token text.
+    #[pyo3(get)]
     pub text: String,
+    /// The token lemma.
+    #[pyo3(get)]
     pub lemma: String,
-    pub info: HashMap<String, String>,
+    /// Other information associated with the token.
+    #[pyo3(get)]
+    pub info: PyPada,
 }
 
 #[pymethods]
-impl PyParsedWord {
+impl PyToken {
     fn __repr__(&self) -> String {
         format!(
-            "ParsedWord<(\"{}\", \"{}\", {:?})>",
+            "Token<(\"{}\", \"{}\", {:?})>",
             self.text, self.lemma, self.info
         )
     }
@@ -74,11 +37,11 @@ pub struct PyChedaka {
 
 #[pymethods]
 impl PyChedaka {
-    /// Initializes a Sanskrit parser by reading the necessary data from the filesystem. This
+    /// Initialize a Sanskrit parser by reading the necessary data from the filesystem. This
     /// method raises a ValueError if the initialiation fails.
     #[new]
-    fn new(path: &str) -> PyResult<Self> {
-        let config = Config::new(&PathBuf::from(path));
+    fn new(path: PathBuf) -> PyResult<Self> {
+        let config = Config::new(path);
         let chedaka = Chedaka::new(config);
         match chedaka {
             Ok(chedaka) => Ok(PyChedaka { chedaka }),
@@ -89,16 +52,16 @@ impl PyChedaka {
         }
     }
 
-    /// Parses the given SLP1 input and returns a list of `ParsedWord` objects.
-    pub fn tokenize(&self, slp1_text: &str) -> Vec<PyParsedWord> {
-        let words = self.chedaka.tokenize(slp1_text);
+    /// Parses the given SLP1 input and returns a list of `Token` objects.
+    pub fn run(&self, slp1_text: &str) -> Vec<PyToken> {
+        let tokens = self.chedaka.run(slp1_text);
         let mut ret = Vec::new();
 
-        for word in words {
-            ret.push(PyParsedWord {
-                text: word.text.clone(),
-                lemma: word.lemma(),
-                info: word.info.to_pydict(),
+        for token in tokens {
+            ret.push(PyToken {
+                text: token.text.clone(),
+                lemma: token.lemma(),
+                info: token.info.into(),
             });
         }
 
