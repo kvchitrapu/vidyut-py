@@ -9,4 +9,6 @@ chedaka = Chedaka("/path/to/vidyut-data")
 print(chedaka.run("rAjA yajate"))
 ```
 """
-from vidyut.vidyut import Chedaka
+from vidyut.vidyut import cheda as __mod
+
+Chedaka = __mod.Chedaka

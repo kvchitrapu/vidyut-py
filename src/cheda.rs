@@ -1,21 +1,19 @@
+///! Defines Python bindings for `vidyut_cheda`.
 use vidyut_cheda::{Chedaka, Config};
 
-use crate::common::PyPada;
+use crate::kosha::semantics::PyPada;
 use pyo3::exceptions::PyValueError;
 use pyo3::prelude::*;
 use std::path::PathBuf;
 
-/// A parsed word.
-#[pyclass(name = "Token")]
+/// A token.
+#[pyclass(name = "Token", get_all)]
 pub struct PyToken {
     /// The token text.
-    #[pyo3(get)]
     pub text: String,
     /// The token lemma.
-    #[pyo3(get)]
     pub lemma: String,
     /// Other information associated with the token.
-    #[pyo3(get)]
     pub info: PyPada,
 }
 
@@ -23,13 +21,15 @@ pub struct PyToken {
 impl PyToken {
     fn __repr__(&self) -> String {
         format!(
-            "Token<(\"{}\", \"{}\", {:?})>",
-            self.text, self.lemma, self.info
+            "Token<(text=\'{}\', lemma='{}', info={})>",
+            self.text,
+            self.lemma,
+            self.info.__repr__()
         )
     }
 }
 
-/// A Sanskrit parser.
+/// A Sanskrit segmentation engine.
 #[pyclass(name = "Chedaka")]
 pub struct PyChedaka {
     chedaka: Chedaka,
@@ -37,8 +37,9 @@ pub struct PyChedaka {
 
 #[pymethods]
 impl PyChedaka {
-    /// Initialize a Sanskrit parser by reading the necessary data from the filesystem. This
-    /// method raises a ValueError if the initialiation fails.
+    /// Initialize `Chedaka` by reading the necessary data from the directory at `path`.
+    ///
+    /// This constructor raises a ValueError if the initialiation fails.
     #[new]
     fn new(path: PathBuf) -> PyResult<Self> {
         let config = Config::new(path);
@@ -52,7 +53,7 @@ impl PyChedaka {
         }
     }
 
-    /// Parses the given SLP1 input and returns a list of `Token` objects.
+    /// Parse the given SLP1 input and returns a list of `Token` objects.
     pub fn run(&self, slp1_text: &str) -> Vec<PyToken> {
         let tokens = self.chedaka.run(slp1_text);
         let mut ret = Vec::new();

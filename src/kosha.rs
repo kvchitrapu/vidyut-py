@@ -1,16 +1,18 @@
-use crate::common::PyPada;
 use pyo3::exceptions::PyOSError;
 use pyo3::prelude::*;
+use semantics::PyPada;
 use std::path::PathBuf;
 use vidyut_kosha as rust;
 
-#[pyclass(name = "KoshaResult")]
-pub struct KoshaResult {
-    #[pyo3(get)]
+pub mod semantics;
+
+#[pyclass(name = "Entry", get_all)]
+pub struct Entry {
+    /// The lookup key for this entry.
     pub text: String,
-    #[pyo3(get)]
+    /// The underlying lemma.
     pub lemma: String,
-    #[pyo3(get)]
+    /// The morphological informated associated with this entry.
     pub info: PyPada,
 }
 
@@ -37,13 +39,13 @@ impl Kosha {
         self.0.contains_prefix(&key)
     }
 
-    pub fn get_all(&self, key: String) -> Vec<KoshaResult> {
+    pub fn get_all(&self, key: String) -> Vec<Entry> {
         let results = self.0.get_all(&key);
         results
             .iter()
             .flat_map(|p| {
                 if let Ok(pada) = self.0.unpack(p) {
-                    Some(KoshaResult {
+                    Some(Entry {
                         text: key.to_string(),
                         lemma: pada.lemma(),
                         info: pada.into(),

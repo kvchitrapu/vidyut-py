@@ -9,24 +9,21 @@ pub mod args;
 use args::*;
 
 /// A step in the derivation.
-#[pyclass(name = "Step")]
+#[pyclass(name = "Step", get_all)]
 #[derive(Clone)]
 pub struct PyStep {
-    #[pyo3(get)]
+    /// The rule that was applied.
     pub rule: Rule,
-    #[pyo3(get)]
+    /// The result of applying `rule`.
     pub result: String,
 }
 
 /// A derivation.
-#[pyclass(name = "Prakriya")]
+#[pyclass(name = "Prakriya", get_all)]
 pub struct PyPrakriya {
     /// The final output of the derivation.
-    #[pyo3(get)]
     pub text: String,
-
     /// All of the steps that were applied during the derivation.
-    #[pyo3(get)]
     pub history: Vec<PyStep>,
 }
 
@@ -68,7 +65,7 @@ pub struct PyDhatupatha(Dhatupatha);
 
 #[pymethods]
 impl PyDhatupatha {
-    /// Creates a new dhatupatha instance from the given `path`.
+    /// Create a new dhatupatha instance from the given `path`.
     ///
     /// `path` should point to a 3-column TSV with columns `code`, `dhatu`, and `artha`.
     ///
@@ -102,7 +99,7 @@ impl PyDhatupatha {
         }
     }
 
-    /// Returns the dhatu with the given `code`, if it exists.
+    /// Return the dhatu with the given `code`, if it exists.
     ///
     /// If a dhatu is found, it will be returned by value.
     ///
@@ -123,23 +120,15 @@ pub struct PyAshtadhyayi(Ashtadhyayi);
 
 #[pymethods]
 impl PyAshtadhyayi {
-    /// Creates an interface with sane defaults.
+    /// Create an interface with sane defaults.
     #[new]
     pub fn new() -> Self {
         Self(Ashtadhyayi::new())
     }
 
-    /// Returns all possible tinanta prakriyas that can be derived with the given initial
+    /// Return all possible tinanta prakriyas that can be derived with the given initial
     /// conditions.
-    #[args(
-        py_args = "*",
-        dhatu,
-        prayoga,
-        purusha,
-        vacana,
-        lakara,
-        sanadi = "None"
-    )]
+    #[pyo3(signature = (*, dhatu, prayoga, purusha, vacana, lakara, sanadi = None))]
     pub fn derive_tinantas(
         &self,
         dhatu: String,
@@ -148,7 +137,7 @@ impl PyAshtadhyayi {
         vacana: Vacana,
         lakara: Lakara,
         sanadi: Option<Sanadi>,
-    ) -> PyResult<Vec<PyPrakriya>> {
+    ) -> Vec<PyPrakriya> {
         let tin_args = TinantaArgs::builder()
             .prayoga(prayoga.into())
             .purusha(purusha.into())
@@ -168,14 +157,13 @@ impl PyAshtadhyayi {
         let dhatu = dhatu.build().expect("should have all required fields");
 
         let results = self.0.derive_tinantas(&dhatu, &tin_args);
-        let py_results = to_py_prakriyas(results);
-        Ok(py_results)
+        to_py_prakriyas(results)
     }
 
-    /// Returns all possible krdanta prakriyas that can be derived with the given initial
+    /// Return all possible krdanta prakriyas that can be derived with the given initial
     /// conditions.
-    #[args(py_args = "*", dhatu, krt)]
-    pub fn derive_krdantas(&self, dhatu: &PyDhatu, krt: Krt) -> PyResult<Vec<PyPrakriya>> {
+    #[pyo3(signature = (*, dhatu, krt))]
+    pub fn derive_krdantas(&self, dhatu: &PyDhatu, krt: Krt) -> Vec<PyPrakriya> {
         let args = KrdantaArgs::builder()
             .krt(krt.into())
             .build()
@@ -184,7 +172,6 @@ impl PyAshtadhyayi {
         let dhatu = &dhatu.0;
 
         let results = self.0.derive_krdantas(dhatu, &args);
-        let py_results = to_py_prakriyas(results);
-        Ok(py_results)
+        to_py_prakriyas(results)
     }
 }

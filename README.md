@@ -11,15 +11,15 @@ Sanskrit toolkit. These are the same bindings we use for our work on
 developers. Our API is mostly stable, but expect breaking changes when
 upgrading.
 
-
 - [Overview](#overview)
 - [Installation](#installation)
+- [Setup](#setup)
 - [Usage](#usage)
 - [Contributing](#contributing)
-- [Data](#data)
 
 [vidyut]: https://github.com/ambuda-org/vidyut
 [ambuda]: https://ambuda.org
+[discord]: https://discord.gg/7rGdTyWY7Z
 
 
 Overview
@@ -27,11 +27,11 @@ Overview
 
 Vidyut, our high-performance Sanskrit toolkit, is implemented in Rust. Rust is
 a wonderful language, but it is not right for all scenarios, and it is not a
-language that many programmers know already. `vidyut-py` provides friendly
-Python bindings on top of Rust so that you can use Vidyut more easily.
+language that many programmers know already.
 
-In general, our Python API is lightweight and mirrors the underlying Rust API,
-with minor change to be more Pythonic.
+`vidyut-py` provides friendly Python bindings on top of Rust so that you can
+use Vidyut more easily. Our Python API is lightweight and mirrors the
+underlying Rust API, with minor change to be more Pythonic.
 
 
 Installation
@@ -44,11 +44,39 @@ require a Rust installation. You can install the `vidyut` package like so:
 $ pip install vidyut
 ```
 
-You can experiment with our latest bindings by installing directly from this repo:
+You can also experiment with our latest bindings by installing directly from
+this repo. Installing from the repo requires a Rust installation on your
+machine.
 
 ```python
 $ pip install git+https://github.com/ambuda-org/vidyut-py.git
 ```
+
+Vidyut is more interesting when it is used with our rich linguistic data. To
+create and configure this data, see the [Setup](#setup) section below.
+
+
+Setup
+-----
+
+*(Requires Rust's `cargo` command)*
+
+Currently, `vidyut-py` does not include any linguistic data. To use Vidyut, you
+must build this linguistic data manually.
+
+To build this data, please use the main [Vidyut][vidyut] repo as follows.
+
+    # Build our linguistic data by using the main `vidyut` repo.
+    git clone git@github.com:ambuda-org/vidyut.git
+    cd vidyut/vidyut-cheda
+    make install
+
+    # The output data will be in `data/vidyut-x.y.z`, where `x.y.z` is the Vidyut version.
+    # Once the `data` folder has been created, you can move it wherever you like.
+    ls data/vidyut-0.1.0/
+
+For examples on how to use this data, see the [Usage](#usage) section below.
+
 
 Usage
 -----
@@ -96,25 +124,7 @@ assert prakriyas[0].text == "Bavati"
 ```
 
 
-Setup
------
+Contributing
+------------
 
-*(Requires Rust's `cargo` command)*
-
-Currently, `vidyut-py` does not include any linguistic data. To use Vidyut, you
-must build this linguistic data manually.
-
-To build this data, please use the main [Vidyut][vidyut] repo as follows.
-
-    # Build our linguistic data by using the main `vidyut` repo.
-    git clone git@github.com:ambuda-org/vidyut.git
-    cd vidyut/vidyut-cheda
-    make install
-
-    # The output data will be in `data/vidyut-x.y.z`, where `x.y.z` is the Vidyut version.
-    # Once the `data` folder has been created, you can move it wherever you like.
-    ls data/vidyut-0.1.0/
-
-Then, you can pass the output path into `Chedaka`:
-
-    chedaka = Chedaka('path/to/vidyut-0.1.0')
+For details, see [CONTRIBUTING.md][CONTRIBUTING.md].
