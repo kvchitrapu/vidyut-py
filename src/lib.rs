@@ -60,6 +60,7 @@ mod sandhi;
 #[pyo3(name = "cheda")]
 fn py_cheda(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_class::<cheda::PyChedaka>()?;
+    m.add_class::<cheda::PyToken>()?;
 
     Ok(())
 }
@@ -103,14 +104,19 @@ fn py_kosha(_py: Python, m: &PyModule) -> PyResult<()> {
 fn py_prakriya(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_class::<prakriya::PyAshtadhyayi>()?;
     m.add_class::<prakriya::PyDhatupatha>()?;
+    m.add_class::<prakriya::PyPrakriya>()?;
 
     // For details on these symbols, see the comments in `py_kosha`.
-    m.add_class::<prakriya::args::Prayoga>()?;
-    m.add_class::<prakriya::args::Purusha>()?;
-    m.add_class::<prakriya::args::Vacana>()?;
-    m.add_class::<prakriya::args::Lakara>()?;
-    m.add_class::<prakriya::args::Sanadi>()?;
-    m.add_class::<prakriya::args::Krt>()?;
+    m.add_class::<prakriya::args::PyDhatu>()?;
+    m.add_class::<prakriya::args::PyPratipadika>()?;
+    m.add_class::<prakriya::args::PyKrt>()?;
+    m.add_class::<prakriya::args::PyLakara>()?;
+    m.add_class::<prakriya::args::PyLinga>()?;
+    m.add_class::<prakriya::args::PyPrayoga>()?;
+    m.add_class::<prakriya::args::PyPurusha>()?;
+    m.add_class::<prakriya::args::PySanadi>()?;
+    m.add_class::<prakriya::args::PyVacana>()?;
+    m.add_class::<prakriya::args::PyVibhakti>()?;
 
     Ok(())
 }

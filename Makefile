@@ -44,3 +44,9 @@ integration_tests: develop
 lint:
 	cargo fmt
 	black .
+
+# Generates Sphinx docs.
+#
+# To view the docs, open `vidyut/docs/build/html/index.html`.
+docs: develop
+	cd vidyut/docs && make html

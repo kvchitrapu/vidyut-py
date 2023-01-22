@@ -1,7 +1,7 @@
 use pyo3::exceptions::{PyFileNotFoundError, PyKeyError, PyValueError};
 use pyo3::prelude::*;
 use std::path::PathBuf;
-use vidyut_prakriya::args::{Dhatu, Gana, KrdantaArgs, TinantaArgs};
+use vidyut_prakriya::args::{Dhatu, Gana, KrdantaArgs, SubantaArgs, TinantaArgs};
 use vidyut_prakriya::{Ashtadhyayi, Dhatupatha};
 use vidyut_prakriya::{Prakriya, Rule, Step};
 
@@ -25,18 +25,6 @@ pub struct PyPrakriya {
     pub text: String,
     /// All of the steps that were applied during the derivation.
     pub history: Vec<PyStep>,
-}
-
-#[pyclass(name = "Dhatu")]
-pub struct PyDhatu(Dhatu);
-
-#[pymethods]
-impl PyDhatu {
-    /// The aupadeshika form of this dhatu.
-    #[getter]
-    fn upadesha(&self) -> String {
-        self.0.upadesha().to_string()
-    }
 }
 
 fn to_py_history(history: &[Step]) -> Vec<PyStep> {
@@ -107,7 +95,7 @@ impl PyDhatupatha {
     /// - `KeyError` if the given `code` is not found.
     pub fn __getitem__(&self, code: String) -> PyResult<PyDhatu> {
         match self.0.get(&code) {
-            Some(d) => Ok(PyDhatu(d.clone())),
+            Some(d) => Ok(PyDhatu::new(d.clone())),
             None => Err(PyKeyError::new_err(code)),
         }
     }
@@ -132,11 +120,11 @@ impl PyAshtadhyayi {
     pub fn derive_tinantas(
         &self,
         dhatu: &PyDhatu,
-        prayoga: Prayoga,
-        purusha: Purusha,
-        vacana: Vacana,
-        lakara: Lakara,
-        sanadi: Option<Sanadi>,
+        prayoga: PyPrayoga,
+        purusha: PyPurusha,
+        vacana: PyVacana,
+        lakara: PyLakara,
+        sanadi: Option<PySanadi>,
     ) -> Vec<PyPrakriya> {
         let tin_args = TinantaArgs::builder()
             .prayoga(prayoga.into())
@@ -163,15 +151,36 @@ impl PyAshtadhyayi {
     /// Return all possible krdanta prakriyas that can be derived with the given initial
     /// conditions.
     #[pyo3(signature = (*, dhatu, krt))]
-    pub fn derive_krdantas(&self, dhatu: &PyDhatu, krt: Krt) -> Vec<PyPrakriya> {
+    pub fn derive_krdantas(&self, dhatu: &PyDhatu, krt: PyKrt) -> Vec<PyPrakriya> {
         let args = KrdantaArgs::builder()
             .krt(krt.into())
             .build()
             .expect("should have all required fields");
 
-        let dhatu = &dhatu.0;
-
+        let dhatu = dhatu.as_ref();
         let results = self.0.derive_krdantas(dhatu, &args);
+        to_py_prakriyas(results)
+    }
+
+    /// Return all possible krdanta prakriyas that can be derived with the given initial
+    /// conditions.
+    #[pyo3(signature = (*, pratipadika, linga, vibhakti, vacana))]
+    pub fn derive_subantas(
+        &self,
+        pratipadika: &PyPratipadika,
+        linga: PyLinga,
+        vibhakti: PyVibhakti,
+        vacana: PyVacana,
+    ) -> Vec<PyPrakriya> {
+        let args = SubantaArgs::builder()
+            .linga(linga.into())
+            .vibhakti(vibhakti.into())
+            .vacana(vacana.into())
+            .build()
+            .expect("should have all required fields");
+
+        let pratipadika = pratipadika.as_ref();
+        let results = self.0.derive_subantas(pratipadika, &args);
         to_py_prakriyas(results)
     }
 }

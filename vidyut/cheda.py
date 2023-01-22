@@ -1,14 +1,6 @@
-"""
-`vidyut.cheda` contains code for segmenting Sanskrit expressions. You can use
-it like so:
+"""`vidyut.cheda` segments and tags Sanskrit expressions."""
 
-```python
-from vidyut.cheda import Chedaka
-
-chedaka = Chedaka("/path/to/vidyut-data")
-print(chedaka.run("rAjA yajate"))
-```
-"""
 from vidyut.vidyut import cheda as __mod
 
 Chedaka = __mod.Chedaka
+Token = __mod.Token

@@ -4,138 +4,46 @@
 </div>
 
 `vidyut-py` defines Python bindings for [Vidyut][vidyut], a high-performance
-Sanskrit toolkit. These are the same bindings we use for our work on
-[Ambuda][ambuda], which is written primarily in Python.
-
-**Status**: In progress. This code is suitable for early adopters and
-developers. Our API is mostly stable, but expect breaking changes when
-upgrading.
-
-- [Overview](#overview)
-- [Installation](#installation)
-- [Setup](#setup)
-- [Usage](#usage)
-- [Contributing](#contributing)
-
-[vidyut]: https://github.com/ambuda-org/vidyut
-[ambuda]: https://ambuda.org
-[discord]: https://discord.gg/7rGdTyWY7Z
+Sanskrit toolkit. These bindings are under active development as part of the
+[Ambuda][ambuda] project.
 
 
-Overview
---------
+Installing
+----------
 
-Vidyut, our high-performance Sanskrit toolkit, is implemented in Rust. Rust is
-a wonderful language, but it is not right for all scenarios, and it is not a
-language that many programmers know already.
+Install and update with [pip](https://pip.pypa.io/en/stable/getting-started/):
 
-`vidyut-py` provides friendly Python bindings on top of Rust so that you can
-use Vidyut more easily. Our Python API is lightweight and mirrors the
-underlying Rust API, with minor change to be more Pythonic.
+    $ pip install -U vidyut
 
+Currently, `vidyut-py` does not include any linguistic data. For now, you must
+build this linguistic data manually. Doing so requires the `cargo` command.
 
-Installation
-------------
+To build this data, run the following commands:
 
-Our Python bindings are published under the `vidyut` package on PyPI and do not
-require a Rust installation. You can install the `vidyut` package like so:
-
-```python
-$ pip install vidyut
-```
-
-You can also experiment with our latest bindings by installing directly from
-this repo. Installing from the repo requires a Rust installation on your
-machine.
-
-```python
-$ pip install git+https://github.com/ambuda-org/vidyut-py.git
-```
-
-Vidyut is more interesting when it is used with our rich linguistic data. To
-create and configure this data, see the [Setup](#setup) section below.
-
-
-Setup
------
-
-*(Requires Rust's `cargo` command)*
-
-Currently, `vidyut-py` does not include any linguistic data. To use Vidyut, you
-must build this linguistic data manually.
-
-To build this data, please use the main [Vidyut][vidyut] repo as follows.
-
-    # Build our linguistic data by using the main `vidyut` repo.
     git clone git@github.com:ambuda-org/vidyut.git
     cd vidyut/vidyut-cheda
     make install
 
-    # The output data will be in `data/vidyut-x.y.z`, where `x.y.z` is the Vidyut version.
-    # Once the `data` folder has been created, you can move it wherever you like.
-    ls data/vidyut-0.1.0/
-
-For examples on how to use this data, see the [Usage](#usage) section below.
+The output data will be in `data/vidyut-x.y.z`, where `x.y.z` is the Vidyut
+version. Once the `data` folder has been created, you can move it wherever you
+like.
 
 
-Usage
+Links
 -----
 
-Using `vidyut-cheda`:
+For users:
 
-```python
-from vidyut.cheda import Chedaka
+- Documentation: https://vidyut.readthedocs.io
+- Releases: https://pypi.org/project/vidyut/
+- Changes: https://vidyut.readthedocs.io/changes/
+- Source Code: https://github.com/ambuda-org/vidyut
+- Issues: https://github.com/ambuda-org/vidyut/issues
 
-# For details on what this path should point to, see `Setup` below.
-chedaka = Chedaka('/path/to/vidyut-data')
+For contributors:
 
-# All input must be in SLP1.
-for token in chedaka.run('gacCati'):
-    print(token.text, token.info)
-```
+- Contributing: [CONTRIBUTING.md](CONTRIBUTING.md)
 
-Using `vidyut-kosha`:
+For other questions:
 
-```python
-from vidyut.kosha import Kosha
-
-kosha = Kosha("/path/to/vidyut-data/kosha")
-for entry in kosha.get("gacCati"):
-    print(entry.info)
-```
-
-Using `vidyut-sandhi`:
-
-```python
-from vidyut.sandhi import Splitter
-
-splitter = Splitter("/path/to/vidyut-data/sandhi-rules.csv")
-for split in splitter.split("ityapi", 2):
-    print(split.first, split.second, split.is_valid)
-```
-
-Using `vidyut-prakriya`:
-
-```python
-from vidyut.prakriya import Ashtadhyayi, Dhatupatha
-
-d = Dhatupatha("/path/to/vidyut-data/prakriya/dhatupatha.tsv")
-bhu = d["01.0001"]
-
-prakriyas = a.derive_tinantas(
-    dhatu=dhatu,
-    prayoga=Prayoga.Kartari,
-    purusha=Purusha.Prathama,
-    vacana=Vacana.Eka,
-    lakara=Lakara.Lat,
-)
-
-assert len(prakriyas) == 1
-assert prakriyas[0].text == "Bavati"
-```
-
-
-Contributing
-------------
-
-For details, see [CONTRIBUTING.md][CONTRIBUTING.md].
+- Chat: https://discord.gg/7rGdTyWY7Z

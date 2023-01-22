@@ -62,7 +62,7 @@ class Ashtadhyayi:
         purusha: Purusha,
         vacana: Vacana,
         lakara: Lakara,
-        sanadi: Optional[Sanadi] = None
+        sanadi: Optional[Sanadi] = None,
     ) -> List[Prakriya]:
         pass
     def derive_krdantas(self, dhatu: Dhatu, krt: Krt) -> List[Prakriya]:

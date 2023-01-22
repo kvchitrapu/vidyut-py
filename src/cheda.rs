@@ -53,7 +53,7 @@ impl PyChedaka {
         }
     }
 
-    /// Parse the given SLP1 input and returns a list of `Token` objects.
+    /// Parse the given SLP1 input and return a list of `Token` objects.
     pub fn run(&self, slp1_text: &str) -> Vec<PyToken> {
         let tokens = self.chedaka.run(slp1_text);
         let mut ret = Vec::new();

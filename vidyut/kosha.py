@@ -1,14 +1,5 @@
-"""
-`vidyut.kosha` contains code for compactly storing Sanskrit words. You can use
-it like so:
+"""`vidyut.kosha` contains code for compactly storing Sanskrit words."""
 
-```python
-from vidyut.kosha import Kosha
-
-kosha = Kosha("/path/to/vidyut-data/kosha")
-print(kosha.get("gacCati"))
-```
-"""
 from vidyut.vidyut import kosha as __mod
 
 Builder = __mod.Builder

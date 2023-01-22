@@ -12,6 +12,5 @@ class Splitter:
     @staticmethod
     def from_csv(path: Path | str) -> Splitter:
         pass
-
     def split_at(self, text: str, index: int) -> List[Split]:
         pass
