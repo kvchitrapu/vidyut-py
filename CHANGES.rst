@@ -7,12 +7,12 @@ releases. That is, versions 0.x.a and 0.x.b will be able to use the same data.
 0.2.0
 -----
 
-In progress.
+Released 2022-01-22.
 
 - Add `vidyut.prakriya`, `vidyut.sandhi`, `vidyut.kosha`, and `vidyut.cheda`.
 - Add bindings for most of Vidyut's core logic.
 - Add more documentation.
-- Move `Parser` to `vidyut.cheda.Chedaka` and tweak API.
+- Move `Parser` to `vidyut.cheda.Chedaka` and tweak its API.
 - Use `Pada` struct instead of a simple hashmap.
 
 
