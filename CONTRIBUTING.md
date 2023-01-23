@@ -27,6 +27,22 @@ For all other work, please see the [main Vidyut repo][vidyut-rs] instead.
 [vidyut-rs]: https://github.com/ambuda-org/vidyut.git
 
 
+Building in development
+-----------------------
+
+You can build this package directly like so:
+
+    $ git clone https://github.com/ambuda-org/vidyut-py.git
+    $ cd vidyut-py
+    $ make install
+
+You can also build Vidyut's linguistic data yourself from our Rust repo:
+
+    $ git clone https://github.com/ambuda-org/vidyut.git
+    $ cd vidyut/vidyut-cheda
+    $ make install
+
+
 Reporting issues
 ----------------
 

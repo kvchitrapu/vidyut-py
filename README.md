@@ -15,19 +15,19 @@ Install and update with [pip](https://pip.pypa.io/en/stable/getting-started/):
 
     $ pip install -U vidyut
 
-Currently, `vidyut-py` does not include any linguistic data. For now, you must
-build this linguistic data manually. Doing so requires the `cargo` command.
+Vidyut is more interesting when used with our rich linguistic data, which you
+can download here:
 
-To build this data, run the following commands:
+    $ wget https://github.com/ambuda-org/vidyut-py/releases/download/0.2.0/data-0.2.0.zip
+    $ unzip data-0.2.0.zip
 
-    git clone git@github.com:ambuda-org/vidyut.git
-    cd vidyut/vidyut-cheda
-    make install
+You can use this data like so:
 
-The output data will be in `data/vidyut-x.y.z`, where `x.y.z` is the Vidyut
-version. Once the `data` folder has been created, you can move it wherever you
-like.
+    from vidyut.cheda import Chedaka
 
+    c = Chedaka("data-0.2.0")
+    for token in c.run("tapaHsvADyAyaniratam"):
+        print(token)
 
 Links
 -----
