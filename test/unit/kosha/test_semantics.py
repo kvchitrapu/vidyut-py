@@ -48,6 +48,8 @@ def test_pratipadika__repr():
     assert repr(p) == "Pratipadika(text='deva')"
     assert str(p) == "deva"
 
+    assert eval(repr(p)) == p
+
 
 def test_pada__make_tinanta():
     p = Pada.make_tinanta(

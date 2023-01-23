@@ -120,6 +120,7 @@ fn py_prakriya(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_class::<prakriya::PyAshtadhyayi>()?;
     m.add_class::<prakriya::PyDhatupatha>()?;
     m.add_class::<prakriya::PyPrakriya>()?;
+    m.add_class::<prakriya::PyStep>()?;
 
     // For details on these symbols, see the comments in `py_kosha`.
     m.add_class::<prakriya::args::PyDhatu>()?;

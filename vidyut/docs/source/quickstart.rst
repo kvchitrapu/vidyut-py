@@ -21,6 +21,10 @@ interface to the Ashtadhyayi's rules. The main return type is
 :class:`~vidyut.prakriya.Prakriya`, which contains both the final result and
 the full derivation that produced it.
 
+
+Main methods
+~~~~~~~~~~~~
+
 :class:`Ashtadhyayi` currently exposes three high-level functions. First,
 `derive_tinantas` derives verbs::
 
@@ -102,6 +106,52 @@ Methods that accept a `dhatu` argument can also accept a
 
     assert len(prakriyas) == 1
     assert prakriyas[0].text == "boBUyate"
+
+
+Using the `Prakriya` type
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+:class:`~vidyut.prakriya.Prakriya` exposes both the final word and the full
+derivation that produced that word. For example, the following code::
+
+    dhatu = d["01.0001"]
+    prakriyas = a.derive_tinantas(
+        dhatu=dhatu,
+        prayoga=Prayoga.Kartari,
+        purusha=Purusha.Prathama,
+        vacana=Vacana.Eka,
+        lakara=Lakara.Lat,
+    )
+
+    for p in prakriyas:
+        print(p.text)
+        print("=" * 20)
+        for step in p.history:
+            print("{:>10}: {}".format(step.rule, step.result))
+
+produces the following output:
+
+.. code-block:: text
+
+    Bavati
+    ====================
+    1.3.1   : BU
+    3.3.123 : BU + la~w
+    1.3.2   : BU + la~w
+    1.3.3   : BU + la~w
+    1.3.9   : BU + l
+    1.3.78  : BU + l
+    3.4.78  : BU + tip
+    1.3.3   : BU + tip
+    1.3.9   : BU + ti
+    3.4.113 : BU + ti
+    3.1.68  : BU + Sap + ti
+    1.3.3   : BU + Sap + ti
+    1.3.8   : BU + Sap + ti
+    1.3.9   : BU + a + ti
+    3.4.113 : BU + a + ti
+    7.3.84  : Bo + a + ti
+    6.1.78  : Bav + a + ti
 
 
 Storing words 

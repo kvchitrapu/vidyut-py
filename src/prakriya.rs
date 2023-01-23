@@ -1,9 +1,10 @@
 use pyo3::exceptions::{PyFileNotFoundError, PyKeyError, PyValueError};
 use pyo3::prelude::*;
+use pyo3::basic::CompareOp;
 use std::path::PathBuf;
 use vidyut_prakriya::args::{Dhatu, Gana, KrdantaArgs, SubantaArgs, TinantaArgs};
 use vidyut_prakriya::{Ashtadhyayi, Dhatupatha};
-use vidyut_prakriya::{Prakriya, Rule, Step};
+use vidyut_prakriya::{Prakriya, Step};
 
 pub mod args;
 use args::*;
@@ -13,9 +14,32 @@ use args::*;
 #[derive(Clone)]
 pub struct PyStep {
     /// The rule that was applied.
-    pub rule: Rule,
+    pub rule: String,
     /// The result of applying `rule`.
     pub result: String,
+}
+
+#[pymethods]
+impl PyStep {
+    #[new]
+    fn new(rule: String, result: String) -> Self {
+        Self { rule, result }
+    }
+
+    fn __repr__(&self) -> String {
+        format!("Step(rule='{}', result='{}')", self.rule, self.result)
+    }
+
+    fn __richcmp__(&self, other: PyRef<PyStep>, op: CompareOp) -> Py<PyAny> {
+        let py = other.py();
+        let is_eq = self.rule == other.rule && self.result == other.result;
+
+        match op {
+            CompareOp::Eq => (is_eq).into_py(py),
+            CompareOp::Ne => (!is_eq).into_py(py),
+            _ => py.NotImplemented(),
+        }
+    }
 }
 
 /// A derivation.
@@ -31,7 +55,7 @@ fn to_py_history(history: &[Step]) -> Vec<PyStep> {
     history
         .iter()
         .map(|x| PyStep {
-            rule: x.rule(),
+            rule: x.rule().to_string(),
             result: x.result().clone(),
         })
         .collect()

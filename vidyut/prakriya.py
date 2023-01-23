@@ -19,3 +19,4 @@ Vibhakti = __mod.Vibhakti
 
 # Output types
 Prakriya = __mod.Prakriya
+Step = __mod.Step
