@@ -44,7 +44,7 @@ def test_basic_subanta(kosha):
     assert repr(devasya) == (
         "Pada(pos=PartOfSpeech.Subanta, pratipadika=Pratipadika(text='deva'), "
         "linga=Linga.Pum, vibhakti=Vibhakti.V6, vacana=Vacana.Eka, "
-        "is_purvapada=false)"
+        "is_purvapada=False)"
     )
 
 
@@ -59,7 +59,7 @@ def test_basic_avyaya(kosha):
 
     assert repr(ca) == (
         "Pada(pos=PartOfSpeech.Avyaya, pratipadika=Pratipadika(text='ca'), "
-        "is_purvapada=false)"
+        "is_purvapada=False)"
     )
 
 
