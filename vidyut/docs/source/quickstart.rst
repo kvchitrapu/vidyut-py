@@ -86,7 +86,7 @@ Third, `derive_subantas` derives nominals::
     assert prakriyas[0].text == "devaH"
 
 Methods that accept a `dhatu` argument can also accept a
-:class:`~vidyut.prakriya.Sanadi` argument:
+:class:`~vidyut.prakriya.Sanadi` argument::
 
     from vidyut.prakriya import Yan
 

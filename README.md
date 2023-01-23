@@ -36,7 +36,7 @@ For users:
 
 - Documentation: https://vidyut.readthedocs.io
 - Releases: https://pypi.org/project/vidyut/
-- Changes: https://vidyut.readthedocs.io/changes/
+- Changes: https://vidyut.readthedocs.io/en/latest/changes.html
 - Source Code: https://github.com/ambuda-org/vidyut
 - Issues: https://github.com/ambuda-org/vidyut/issues
 
