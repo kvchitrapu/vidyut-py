@@ -11,19 +11,22 @@ use std::path::PathBuf;
 pub struct PyToken {
     /// The token text.
     pub text: String,
-    /// The token lemma.
-    pub lemma: String,
     /// Other information associated with the token.
     pub info: PyPada,
 }
 
 #[pymethods]
 impl PyToken {
+    #[getter]
+    fn lemma(&self) -> Option<String> {
+        self.info.lemma()
+    }
+
     fn __repr__(&self) -> String {
         format!(
             "Token<(text=\'{}\', lemma='{}', info={})>",
             self.text,
-            self.lemma,
+            self.lemma().unwrap_or("".to_string()),
             self.info.__repr__()
         )
     }
@@ -61,7 +64,6 @@ impl PyChedaka {
         for token in tokens {
             ret.push(PyToken {
                 text: token.text.clone(),
-                lemma: token.lemma(),
                 info: token.info.into(),
             });
         }

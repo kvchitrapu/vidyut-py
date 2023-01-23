@@ -7,6 +7,9 @@
 Sanskrit toolkit. These bindings are under active development as part of the
 [Ambuda][ambuda] project.
 
+[ambuda]: https://ambuda.org
+[vidyut]: https://github.com/ambuda-org/vidyut
+
 
 Installing
 ----------
@@ -39,11 +42,8 @@ For users:
 - Changes: https://vidyut.readthedocs.io/en/latest/changes.html
 - Source Code: https://github.com/ambuda-org/vidyut
 - Issues: https://github.com/ambuda-org/vidyut/issues
+- Chat: https://discord.gg/7rGdTyWY7Z
 
 For contributors:
 
-- Contributing: [CONTRIBUTING.md](CONTRIBUTING.md)
-
-For other questions:
-
-- Chat: https://discord.gg/7rGdTyWY7Z
+- [CONTRIBUTING.md](CONTRIBUTING.md)

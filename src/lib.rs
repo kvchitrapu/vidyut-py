@@ -31,8 +31,23 @@ X = bar.X
 We use this pattern extensively. For an example, see `vidyut/kosha.py`.
 
 
-Comment style
--------------
+Conventions
+-----------
+
+`__repr__`
+~~~~~~~~~~
+
+Prefer returning a string that could be `eval`-ed:
+
+> For many types, this function makes an attempt to return **a string that would yield an object with
+the same value when passed to eval()**; otherwise, the representation is a string enclosed in angle
+brackets that contains the name of the type of the object together with additional information
+often including the name and address of the object.
+
+-- Python docs (emphasis added)
+
+Comments
+~~~~~~~~
 
 Rustdoc comments are used as-is to document their Python counterparts [1]. If a comment is on an
 item wrapped in a PyO3 macro, prefer an imperative style ("Return" vs. "Returns"). Otherwise, use

@@ -27,7 +27,7 @@ impl PyDhatu {
     }
 
     fn __repr__(&self) -> String {
-        format!("<Dhatu(upadesha='{}')>", self.0.upadesha())
+        format!("Dhatu(upadesha='{}')", self.0.upadesha())
     }
 }
 
@@ -63,7 +63,7 @@ impl PyPratipadika {
     }
 
     fn __repr__(&self) -> String {
-        format!("<Pratipadika(text='{}')>", self.0.text())
+        format!("Pratipadika(text='{}')", self.0.text())
     }
 
     fn __richcmp__(&self, other: PyRef<PyPratipadika>, op: CompareOp) -> Py<PyAny> {

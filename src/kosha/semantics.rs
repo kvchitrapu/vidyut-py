@@ -243,8 +243,8 @@ impl ToPy<Option<PyLakara>> for Lakara {
             Lakara::Let => Some(Let),
             Lakara::Lot => Some(Lot),
             Lakara::Lan => Some(Lan),
-            Lakara::LinAshih => Some(AshirLin),
-            Lakara::LinVidhi => Some(VidhiLin),
+            Lakara::AshirLin => Some(AshirLin),
+            Lakara::VidhiLin => Some(VidhiLin),
             Lakara::Lun => Some(Lun),
             Lakara::LunNoAgama => Some(LunNoAgama),
             Lakara::Lrn => Some(Lrn),
@@ -267,8 +267,8 @@ impl ToRust<Lakara> for Option<PyLakara> {
                 Py::Let => R::Let,
                 Py::Lot => R::Lot,
                 Py::Lan => R::Lan,
-                Py::VidhiLin => R::LinVidhi,
-                Py::AshirLin => R::LinAshih,
+                Py::VidhiLin => R::VidhiLin,
+                Py::AshirLin => R::AshirLin,
                 Py::Lun => R::Lun,
                 Py::LunNoAgama => R::LunNoAgama,
                 Py::Lrn => R::Lrn,
@@ -441,6 +441,39 @@ pub struct PyPada {
 
 #[pymethods]
 impl PyPada {
+    /// Generic constructor. This is a useful test of our `repr` representation.
+    /// TODO: handle creating a word with invalid state, e.g. a tinanta with no dhatu.
+    /*
+    #[new]
+    #[pyo3(signature=(*, pos, dhatu, pratipadika, purusha, lakara, pada_prayoga, vacana, linga, vibhakti, is_purvapada))]
+    #[allow(clippy::too_many_arguments)]
+    fn new(
+        pos: Option<PyPartOfSpeech>,
+        dhatu: Option<PyDhatu>,
+        pratipadika: Option<PyPratipadika>,
+        purusha: Option<PyPurusha>,
+        lakara: Option<PyLakara>,
+        pada_prayoga: Option<PyPadaPrayoga>,
+        vacana: Option<PyVacana>,
+        linga: Option<PyLinga>,
+        vibhakti: Option<PyVibhakti>,
+        is_purvapada: bool,
+    ) -> PyResult<Self> {
+        Ok(Self {
+            pos,
+            dhatu,
+            pratipadika,
+            purusha,
+            lakara,
+            pada_prayoga,
+            vacana,
+            linga,
+            vibhakti,
+            is_purvapada,
+        })
+    }
+    */
+
     /// Create a new *tinanta* (verb).
     #[staticmethod]
     #[pyo3(signature=(*, dhatu, purusha, vacana, lakara, pada_prayoga))]
@@ -495,6 +528,15 @@ impl PyPada {
         }
     }
 
+    #[getter]
+    pub fn lemma(&self) -> Option<String> {
+        if let Some(d) = &self.dhatu {
+            Some(d.text.to_string())
+        } else {
+            self.pratipadika.as_ref().map(|p| p.text.to_string())
+        }
+    }
+
     fn __richcmp__(&self, other: PyRef<PyPada>, op: CompareOp) -> Py<PyAny> {
         let py = other.py();
 
@@ -540,6 +582,9 @@ impl PyPada {
                 if let Some(x) = &self.lakara {
                     args.push(format!("lakara={}", x.__pyo3__repr__()));
                 };
+                if let Some(x) = &self.pada_prayoga {
+                    args.push(format!("pada_prayoga={}", x.__pyo3__repr__()));
+                };
             }
             Some(PyPartOfSpeech::Subanta) | Some(PyPartOfSpeech::Avyaya) => {
                 if let Some(x) = &self.pratipadika {
@@ -554,7 +599,11 @@ impl PyPada {
                 if let Some(x) = &self.vacana {
                     args.push(format!("vacana={}", x.__pyo3__repr__()));
                 };
-                args.push(format!("is_purvapada={}", self.is_purvapada));
+                let is_purvapada = match self.is_purvapada {
+                    true => "True",
+                    false => "False",
+                };
+                args.push(format!("is_purvapada={}", is_purvapada));
             }
             None => {
                 args.push("None".to_string());
@@ -562,7 +611,7 @@ impl PyPada {
         };
 
         let args = args.join(", ");
-        format!("<Pada({args})>")
+        format!("Pada({args})")
     }
 }
 
@@ -570,11 +619,13 @@ impl From<Pada> for PyPada {
     fn from(val: Pada) -> Self {
         let mut res = PyPada::default();
         match val {
-            Pada::Avyaya(_) => {
+            Pada::Avyaya(a) => {
                 res.pos = Some(PyPartOfSpeech::Avyaya);
+                res.pratipadika = Some(PyPratipadika::new(a.pratipadika.lemma()));
             }
             Pada::Subanta(s) => {
                 res.pos = Some(PyPartOfSpeech::Subanta);
+                res.pratipadika = Some(PyPratipadika::new(s.pratipadika.lemma()));
                 res.linga = s.linga.to_py();
                 res.vibhakti = s.vibhakti.to_py();
                 res.vacana = s.vacana.to_py();
@@ -582,6 +633,7 @@ impl From<Pada> for PyPada {
             }
             Pada::Tinanta(t) => {
                 res.pos = Some(PyPartOfSpeech::Tinanta);
+                res.dhatu = Some(PyDhatu::new(t.dhatu.text().to_string()));
                 res.lakara = t.lakara.to_py();
                 res.pada_prayoga = t.pada.to_py();
                 res.purusha = t.purusha.to_py();

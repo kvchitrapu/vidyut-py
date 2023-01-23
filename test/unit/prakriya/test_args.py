@@ -7,7 +7,7 @@ from vidyut.prakriya import (
 
 def test_pratipadika_new():
     p = Pratipadika(text="deva")
-    assert repr(p) == "<Pratipadika(text='deva')>"
+    assert repr(p) == "Pratipadika(text='deva')"
 
 
 def test_pratipadika_new__fails_if_no_args():

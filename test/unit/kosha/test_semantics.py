@@ -68,8 +68,9 @@ def test_pada__make_tinanta():
     assert p.vibhakti is None
 
     assert repr(p) == (
-        "<Pada(pos=PartOfSpeech.Tinanta, dhatu=Dhatu(text='gam'), "
-        "purusha=Purusha.Prathama, vacana=Vacana.Eka, lakara=Lakara.Lat)>"
+        "Pada(pos=PartOfSpeech.Tinanta, dhatu=Dhatu(text='gam'), "
+        "purusha=Purusha.Prathama, vacana=Vacana.Eka, lakara=Lakara.Lat, "
+        "pada_prayoga=PadaPrayoga.Parasmaipada)"
     )
 
 
@@ -169,8 +170,8 @@ def test_pada__make_subanta():
     assert p.lakara is None
 
     assert repr(p) == (
-        "<Pada(pos=PartOfSpeech.Subanta, pratipadika=Pratipadika(text='deva'), "
-        "linga=Linga.Pum, vibhakti=Vibhakti.V7, vacana=Vacana.Eka, is_purvapada=false)>"
+        "Pada(pos=PartOfSpeech.Subanta, pratipadika=Pratipadika(text='deva'), "
+        "linga=Linga.Pum, vibhakti=Vibhakti.V7, vacana=Vacana.Eka, is_purvapada=False)"
     )
 
 
@@ -223,8 +224,8 @@ def test_pada__make_avyaya():
     assert p.is_purvapada is False
 
     assert repr(p) == (
-        "<Pada(pos=PartOfSpeech.Avyaya, pratipadika=Pratipadika(text='ca'), "
-        "is_purvapada=false)>"
+        "Pada(pos=PartOfSpeech.Avyaya, pratipadika=Pratipadika(text='ca'), "
+        "is_purvapada=False)"
     )
 
 

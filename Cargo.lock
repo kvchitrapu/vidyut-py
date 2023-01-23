@@ -66,9 +66,9 @@ dependencies = [
 
 [[package]]
 name = "bumpalo"
-version = "3.11.1"
+version = "3.12.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "572f695136211188308f16ad2ca5c851a712c464060ae6974944458eb83880ba"
+checksum = "0d261e256854913907f67ed06efbc3338dfe6179796deefc1ff763fc1aee5535"
 
 [[package]]
 name = "castaway"
@@ -607,9 +607,9 @@ dependencies = [
 
 [[package]]
 name = "proc-macro2"
-version = "1.0.49"
+version = "1.0.50"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "57a8eca9f9c4ffde41714334dee777596264c7825420f521abc92b5b5deb63a5"
+checksum = "6ef7d57beacfaf2d8aee5937dab7b7f28de3cb8b1828479bb5de2a7106f2bae2"
 dependencies = [
  "unicode-ident",
 ]
@@ -717,9 +717,9 @@ checksum = "456c603be3e8d448b072f410900c09faf164fbce2d480456f50eea6e25f9c848"
 
 [[package]]
 name = "rustix"
-version = "0.36.6"
+version = "0.36.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4feacf7db682c6c329c4ede12649cd36ecab0f3be5b7d74e6a20304725db4549"
+checksum = "d4fdebc4b395b7fbb9ab11e462e20ed9051e7b16e42d24042c776eca0ac81b03"
 dependencies = [
  "bitflags",
  "errno",
@@ -883,7 +883,7 @@ checksum = "49874b5167b65d7193b8aba1567f5c7d93d001cafc34600cee003eda787e483f"
 [[package]]
 name = "vidyut-cheda"
 version = "0.1.0"
-source = "git+https://github.com/ambuda-org/vidyut#0d39324363a4baeafe41f82fc18ad04ed7ebde52"
+source = "git+https://github.com/ambuda-org/vidyut#3e82762c04827133925208c1480a4ab9c1610176"
 dependencies = [
  "clap",
  "csv",
@@ -903,7 +903,7 @@ dependencies = [
 [[package]]
 name = "vidyut-kosha"
 version = "0.1.0"
-source = "git+https://github.com/ambuda-org/vidyut#0d39324363a4baeafe41f82fc18ad04ed7ebde52"
+source = "git+https://github.com/ambuda-org/vidyut#3e82762c04827133925208c1480a4ab9c1610176"
 dependencies = [
  "clap",
  "env_logger 0.9.3",
@@ -915,7 +915,7 @@ dependencies = [
 [[package]]
 name = "vidyut-lipi"
 version = "0.1.0"
-source = "git+https://github.com/ambuda-org/vidyut#0d39324363a4baeafe41f82fc18ad04ed7ebde52"
+source = "git+https://github.com/ambuda-org/vidyut#3e82762c04827133925208c1480a4ab9c1610176"
 dependencies = [
  "clap",
 ]
@@ -923,7 +923,7 @@ dependencies = [
 [[package]]
 name = "vidyut-prakriya"
 version = "0.1.0"
-source = "git+https://github.com/ambuda-org/vidyut#0d39324363a4baeafe41f82fc18ad04ed7ebde52"
+source = "git+https://github.com/ambuda-org/vidyut#3e82762c04827133925208c1480a4ab9c1610176"
 dependencies = [
  "clap",
  "compact_str",
@@ -952,7 +952,7 @@ dependencies = [
 [[package]]
 name = "vidyut-sandhi"
 version = "0.1.0"
-source = "git+https://github.com/ambuda-org/vidyut#0d39324363a4baeafe41f82fc18ad04ed7ebde52"
+source = "git+https://github.com/ambuda-org/vidyut#3e82762c04827133925208c1480a4ab9c1610176"
 dependencies = [
  "clap",
  "csv",
