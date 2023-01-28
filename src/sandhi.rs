@@ -12,13 +12,13 @@ pub struct PySplit(Split);
 impl PySplit {
     /// The first part of the split.
     #[getter]
-    fn first(&self) -> &String {
+    fn first(&self) -> &str {
         self.0.first()
     }
 
     /// The second part of the split.
     #[getter]
-    fn second(&self) -> &String {
+    fn second(&self) -> &str {
         self.0.second()
     }
 

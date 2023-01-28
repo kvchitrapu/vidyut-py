@@ -50,9 +50,7 @@ def test_basic_subanta(kosha):
 
 def test_basic_avyaya(kosha):
     entries = kosha.get_all("ca")
-    entries = [
-        e for e in entries if e.pos == PartOfSpeech.Avyaya
-    ]
+    entries = [e for e in entries if e.pos == PartOfSpeech.Avyaya]
 
     ca = entries[0]
     assert ca.lemma == "ca"

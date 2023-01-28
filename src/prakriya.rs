@@ -1,6 +1,6 @@
+use pyo3::basic::CompareOp;
 use pyo3::exceptions::{PyFileNotFoundError, PyKeyError, PyValueError};
 use pyo3::prelude::*;
-use pyo3::basic::CompareOp;
 use std::path::PathBuf;
 use vidyut_prakriya::args::{Dhatu, Gana, KrdantaArgs, SubantaArgs, TinantaArgs};
 use vidyut_prakriya::{Ashtadhyayi, Dhatupatha};

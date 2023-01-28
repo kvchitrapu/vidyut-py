@@ -1,8 +1,8 @@
 ///! Defines Python bindings for `vidyut_cheda`.
-use vidyut_cheda::{Chedaka, Config};
+use vidyut_cheda::{Chedaka, Config, Error};
 
 use crate::kosha::semantics::PyPada;
-use pyo3::exceptions::PyValueError;
+use pyo3::exceptions::{PyOSError, PyValueError};
 use pyo3::prelude::*;
 use std::path::PathBuf;
 
@@ -26,7 +26,7 @@ impl PyToken {
         format!(
             "Token<(text=\'{}\', lemma='{}', info={})>",
             self.text,
-            self.lemma().unwrap_or("".to_string()),
+            self.lemma().unwrap_or_default(),
             self.info.__repr__()
         )
     }
@@ -46,28 +46,44 @@ impl PyChedaka {
     #[new]
     fn new(path: PathBuf) -> PyResult<Self> {
         let config = Config::new(path);
-        let chedaka = Chedaka::new(config);
-        match chedaka {
+        match Chedaka::new(config) {
             Ok(chedaka) => Ok(PyChedaka { chedaka }),
-            Err(e) => Err(PyValueError::new_err(format!(
-                "Could not initialize segmenter. Error was: `{:?}`",
-                e
-            ))),
+            Err(e) => Err(WrappedError(e).into()),
         }
     }
 
     /// Parse the given SLP1 input and return a list of `Token` objects.
-    pub fn run(&self, slp1_text: &str) -> Vec<PyToken> {
-        let tokens = self.chedaka.run(slp1_text);
-        let mut ret = Vec::new();
+    pub fn run(&self, slp1_text: &str) -> PyResult<Vec<PyToken>> {
+        let tokens = match self.chedaka.run(slp1_text) {
+            Ok(tokens) => tokens,
+            Err(e) => return Err(WrappedError(e).into()),
+        };
 
+        let mut ret = Vec::new();
         for token in tokens {
             ret.push(PyToken {
-                text: token.text.clone(),
-                info: token.info.into(),
+                text: token.text().to_string(),
+                info: token.info().clone().into(),
             });
         }
 
-        ret
+        Ok(ret)
+    }
+}
+
+struct WrappedError(Error);
+
+impl From<Error> for WrappedError {
+    fn from(e: Error) -> Self {
+        Self(e)
+    }
+}
+
+impl From<WrappedError> for PyErr {
+    fn from(e: WrappedError) -> Self {
+        match e.0 {
+            Error::Io(e) => PyOSError::new_err(format!("{}", e)),
+            e => PyValueError::new_err(format!("{}", e)),
+        }
     }
 }

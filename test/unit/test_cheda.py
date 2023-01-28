@@ -67,6 +67,27 @@ def test_init(chedaka):
     assert True
 
 
+def test_init__directory_empty():
+    with tempfile.TemporaryDirectory() as tempdir:
+        tempdir: Path = Path(tempdir)
+    with pytest.raises(OSError):
+        return Chedaka(tempdir)
+
+
+def test_init__kosha_invalid():
+    with tempfile.TemporaryDirectory() as tempdir:
+        tempdir: Path = Path(tempdir)
+        create_kosha(tempdir / "kosha")
+        create_sandhi_rules(tempdir / "sandhi-rules.csv")
+        create_model_files(tempdir / "model")
+
+        with open(tempdir / "kosha" / "padas.fst", "w") as f:
+            f.write("junk data")
+
+    with pytest.raises(OSError):
+        c = Chedaka(tempdir)
+
+
 def test_run__single_word(chedaka):
     tokens = chedaka.run("gacCati")
 
@@ -76,10 +97,15 @@ def test_run__single_word(chedaka):
     assert gacchati.info.pos == PartOfSpeech.Avyaya
 
 
-def test_run__bad_input(chedaka):
+def test_run__unknown_word(chedaka):
     tokens = chedaka.run("gacCatf")
 
     assert len(tokens) == 1
     gacchati = tokens[0]
     assert gacchati.text == "gacCatf"
     assert gacchati.info.pos is None
+
+
+def test_run__invalid_input(chedaka):
+    with pytest.raises(ValueError, match="ASCII") as e:
+        tokens = chedaka.run("गच्छति")

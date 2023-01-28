@@ -621,11 +621,11 @@ impl From<Pada> for PyPada {
         match val {
             Pada::Avyaya(a) => {
                 res.pos = Some(PyPartOfSpeech::Avyaya);
-                res.pratipadika = Some(PyPratipadika::new(a.pratipadika.lemma()));
+                res.pratipadika = Some(PyPratipadika::new(a.pratipadika.lemma().to_string()));
             }
             Pada::Subanta(s) => {
                 res.pos = Some(PyPartOfSpeech::Subanta);
-                res.pratipadika = Some(PyPratipadika::new(s.pratipadika.lemma()));
+                res.pratipadika = Some(PyPratipadika::new(s.pratipadika.lemma().to_string()));
                 res.linga = s.linga.to_py();
                 res.vibhakti = s.vibhakti.to_py();
                 res.vacana = s.vacana.to_py();

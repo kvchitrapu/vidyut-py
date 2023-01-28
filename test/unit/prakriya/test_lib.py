@@ -41,27 +41,27 @@ def test_prakriya():
     assert len(prakriyas) == 1
     p = prakriyas[0]
     assert p.text == "Bavati"
-    for step in p.history :
+    for step in p.history:
         print(step)
 
     assert p.history == [
-        Step(rule='1.3.1', result='BU'),
-        Step(rule='3.3.123', result='BU + la~w'),
-        Step(rule='1.3.2', result='BU + la~w'),
-        Step(rule='1.3.3', result='BU + la~w'),
-        Step(rule='1.3.9', result='BU + l'),
-        Step(rule='1.3.78', result='BU + l'),
-        Step(rule='3.4.78', result='BU + tip'),
-        Step(rule='1.3.3', result='BU + tip'),
-        Step(rule='1.3.9', result='BU + ti'),
-        Step(rule='3.4.113', result='BU + ti'),
-        Step(rule='3.1.68', result='BU + Sap + ti'),
-        Step(rule='1.3.3', result='BU + Sap + ti'),
-        Step(rule='1.3.8', result='BU + Sap + ti'),
-        Step(rule='1.3.9', result='BU + a + ti'),
-        Step(rule='3.4.113', result='BU + a + ti'),
-        Step(rule='7.3.84', result='Bo + a + ti'),
-        Step(rule='6.1.78', result='Bav + a + ti'),
+        Step(rule="1.3.1", result="BU"),
+        Step(rule="3.3.123", result="BU + la~w"),
+        Step(rule="1.3.2", result="BU + la~w"),
+        Step(rule="1.3.3", result="BU + la~w"),
+        Step(rule="1.3.9", result="BU + l"),
+        Step(rule="1.3.78", result="BU + l"),
+        Step(rule="3.4.78", result="BU + tip"),
+        Step(rule="1.3.3", result="BU + tip"),
+        Step(rule="1.3.9", result="BU + ti"),
+        Step(rule="3.4.113", result="BU + ti"),
+        Step(rule="3.1.68", result="BU + Sap + ti"),
+        Step(rule="1.3.3", result="BU + Sap + ti"),
+        Step(rule="1.3.8", result="BU + Sap + ti"),
+        Step(rule="1.3.9", result="BU + a + ti"),
+        Step(rule="3.4.113", result="BU + a + ti"),
+        Step(rule="7.3.84", result="Bo + a + ti"),
+        Step(rule="6.1.78", result="Bav + a + ti"),
     ]
 
 
