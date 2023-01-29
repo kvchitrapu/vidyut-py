@@ -1,3 +1,17 @@
+# Needed because we have folders called "docs" and "test" that confuse `make`.
+.PHONY: docs test py-venv-check clean
+
+.EXPORT_ALL_VARIABLES:
+
+# Git and docker params
+GITCOMMIT=$(shell git rev-parse --short HEAD)
+GITBRANCH=$(shell git rev-parse --abbrev-ref --short HEAD)
+VIDYUT_PY_VERSION=v0.1
+VIDYUT_PY_NAME=vidyut-py
+VIDYUT_PY_IMAGE=${VIDYUT_PY_NAME}:${VIDYUT_PY_VERSION}-${GITBRANCH}-${GITCOMMIT}
+VIDYUT_PY_IMAGE_LATEST="$(VIDYUT_PY_NAME)-rel:latest"
+VIDYUT_VER=0.2.0
+
 # Checks that the caller is in a virtual environment.
 py-venv-check: 
 ifeq ("$(VIRTUAL_ENV)","")
@@ -50,3 +64,12 @@ lint:
 # To view the docs, open `vidyut/docs/build/html/index.html`.
 docs: develop
 	cd vidyut/docs && make html
+
+# Docker commands
+# Build docker image. All tag the latest to the most react image
+# docker-build: lint-check
+docker-build: 
+	@echo "> Vidyut-py build is in progress. Expect it to take 2-5 minutes."
+	@printf "%0.s-" {1..21} && echo
+	@docker build -t ${VIDYUT_PY_IMAGE} -t ${VIDYUT_PY_IMAGE_LATEST} --build-arg VIDYUT_VER=${VIDYUT_VER} -f build/containers/Dockerfile ${PWD} 
+	@echo "Vidyut-py Image    : ✔ (${VIDYUT_PY_IMAGE}, ${VIDYUT_PY_IMAGE_LATEST})"
