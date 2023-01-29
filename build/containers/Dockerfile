@@ -30,7 +30,10 @@ RUN . "$HOME/.cargo/env" && export VIDYUT_DATA_DIR="/var/vidyut/data-${VIDYUT_VE
 
 # ####################################f
 # Stage 3: Prepare final image
+
+# TODO: Find where the binaries are and just the binaries and not dev images.
 FROM build-vidyut-py as final 
+ARG VIDYUT_VER=0.2.0
 RUN echo "************* Building FINAL ${BUILD_TYPE}*****************"
 COPY --from=build-vidyut-py /usr/local/vidyut /var/local/vidyut
 COPY --from=build-vidyut-py /var/vidyut/data-${VIDYUT_VER} /var/vidyut/data-${VIDYUT_VER}
